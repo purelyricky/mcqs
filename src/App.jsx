@@ -3,6 +3,7 @@ import Header from './components/Header'
 import SectionNav from './components/SectionNav'
 import MCQQuestion from './components/MCQQuestion'
 import Progress from './components/Progress'
+import CompletionScreen from './components/CompletionScreen'
 import section1 from './data/section1'
 import section2 from './data/section2'
 import section3 from './data/section3'
@@ -62,6 +63,7 @@ function App() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState({})
   const [userAnswers, setUserAnswers] = useState({})
   const [submittedQuestions, setSubmittedQuestions] = useState(new Set())
+  const [completedSections, setCompletedSections] = useState({})
 
   useEffect(() => {
     if (darkMode) {
@@ -99,6 +101,13 @@ function App() {
         ...prev,
         [activeSection]: questionIdx + 1
       }))
+    } else {
+      // User clicked "Finish Section" on the last question
+      // Mark section as completed
+      setCompletedSections(prev => ({
+        ...prev,
+        [activeSection]: true
+      }))
     }
   }
 
@@ -109,6 +118,35 @@ function App() {
         [activeSection]: questionIdx - 1
       }))
     }
+  }
+
+  const handleRestartSection = () => {
+    // Reset the current section
+    setCurrentQuestionIndex(prev => ({
+      ...prev,
+      [activeSection]: 0
+    }))
+
+    // Clear answers for this section
+    const sectionQuestionIds = currentQuestions.map(q => q.id)
+    setUserAnswers(prev => {
+      const newAnswers = { ...prev }
+      sectionQuestionIds.forEach(id => delete newAnswers[id])
+      return newAnswers
+    })
+
+    // Clear submitted questions for this section
+    setSubmittedQuestions(prev => {
+      const newSubmitted = new Set(prev)
+      sectionQuestionIds.forEach(id => newSubmitted.delete(id))
+      return newSubmitted
+    })
+
+    // Mark section as not completed
+    setCompletedSections(prev => ({
+      ...prev,
+      [activeSection]: false
+    }))
   }
 
   const currentQuestions = sections[activeSection] || []
@@ -126,6 +164,7 @@ function App() {
 
   const isCurrentQuestionSubmitted = currentQuestion && submittedQuestions.has(currentQuestion.id)
   const currentAnswer = currentQuestion ? (userAnswers[currentQuestion.id] || []) : []
+  const isSectionCompleted = completedSections[activeSection] === true
 
   return (
     <div className="min-h-screen font-display bg-background-light dark:bg-background-dark text-gray-800 dark:text-gray-200">
@@ -137,8 +176,18 @@ function App() {
         setActiveSection={handleSectionChange}
       />
 
-      {/* Progress Bar Section */}
-      <div className="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 sticky top-16 z-10">
+      {/* Show Completion Screen if section is completed */}
+      {isSectionCompleted ? (
+        <CompletionScreen
+          score={correctAnswersInSection.length}
+          totalQuestions={currentQuestions.length}
+          onRestart={handleRestartSection}
+          darkMode={darkMode}
+        />
+      ) : (
+        <>
+          {/* Progress Bar Section */}
+          <div className="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 sticky top-16 z-10">
         <div className="container max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -226,6 +275,8 @@ function App() {
           )}
         </div>
       </main>
+        </>
+      )}
     </div>
   )
 }
