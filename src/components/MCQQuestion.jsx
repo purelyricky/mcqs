@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-const MCQQuestion = ({ question, questionNumber, userAnswer, onAnswerSelect, isSubmitted }) => {
+function MCQQuestion({ question, questionNumber, userAnswer, onAnswerSelect, isSubmitted }) {
   const [selectedOptions, setSelectedOptions] = useState(userAnswer || [])
 
   useEffect(() => {
@@ -173,7 +173,9 @@ const MCQQuestion = ({ question, questionNumber, userAnswer, onAnswerSelect, isS
               {/* Show option letter before submission or if no special status */}
               {(!isSubmitted || (!isCorrectAnswer(option.id) && !selectedOptions.includes(option.id))) && option.id}
             </div>
-            <span className="text-gray-800 dark:text-gray-200 flex-1">
+            <span
+              className={`text-gray-800 dark:text-gray-200 flex-1 ${question.id === 's2q1' ? 'whitespace-pre-line' : ''}`}
+            >
               {renderQuestionText(option.text)}
             </span>
           </div>
