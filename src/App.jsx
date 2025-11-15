@@ -16,6 +16,11 @@ import section10 from './data/section10'
 import section11 from './data/section11'
 import sampleQuestions from './data/sampleQuestions'
 import pl2Questions from './data/pl2Questions'
+import mockTest1 from './data/mockTest1'
+import mockTest3 from './data/mockTest3'
+import onlineTest from './data/onlineTest'
+import sampleTest1 from './data/sampleTest1'
+import sampleTest2 from './data/sampleTest2'
 
 
 const sections = {
@@ -32,6 +37,11 @@ const sections = {
   'Section 11: Advanced Topics': section11,
   'Sample Questions': sampleQuestions,
   'PL2 Questions': pl2Questions,
+  'Mock Test 1': mockTest1,
+  'Mock Test 3': mockTest3,
+  'Online Test': onlineTest,
+  'Sample Test 1': sampleTest1,
+  'Sample Test 2': sampleTest2,
 }
 
 function App() {
