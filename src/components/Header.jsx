@@ -17,7 +17,18 @@ const Header = ({ darkMode, setDarkMode }) => {
           </div>
 
           <div className="flex items-center space-x-4">
-            <button 
+            <a
+              href="https://github.com/purelyricky/mcqs"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+              aria-label="Star this project on GitHub"
+              title="Star this project on GitHub"
+            >
+              <span className="material-symbols-outlined text-base text-yellow-500">grade</span>
+              <span className="hidden sm:inline">Star on GitHub</span>
+            </a>
+            <button
               onClick={() => setDarkMode(!darkMode)}
               className="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
               aria-label="Toggle dark mode"
