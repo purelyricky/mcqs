@@ -21,7 +21,12 @@ import mockTest3 from './data/mockTest3'
 import onlineTest from './data/onlineTest'
 import sampleTest1 from './data/sampleTest1'
 import sampleTest2 from './data/sampleTest2'
-
+import chapter12Html from './data/chapter12'
+import chapter13Html from './data/chapter13'
+import chapter14Html from './data/chapter14'
+import codesMCQsHtml from './data/codesMCQs'
+import chapter11Pptx from './data/chapter11_pptx'
+import chapter11Html from './data/chapter11'
 
 const sections = {
   'Section 1: Basics & Classes': section1,
@@ -42,6 +47,13 @@ const sections = {
   'Online Test': onlineTest,
   'Sample Test 1': sampleTest1,
   'Sample Test 2': sampleTest2,
+  'Chapter 11: PPTX': chapter11Pptx,
+  'Chapter 11: HTML': chapter11Html,
+  'Chapter 12: HTML': chapter12Html,
+  'Chapter 13: HTML': chapter13Html,
+  'Chapter 14: HTML': chapter14Html,
+  'Codes MCQs': codesMCQsHtml,
+
 }
 
 function App() {
