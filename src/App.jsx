@@ -5,30 +5,33 @@ import MCQQuestion from './components/MCQQuestion'
 import Progress from './components/Progress'
 import section1 from './data/section1'
 import section2 from './data/section2'
-// import section3 from './data/section3'
-// import section4 from './data/section4'
-// import section5 from './data/section5'
-// import section6 from './data/section6'
-// import section7 from './data/section7'
-// import section8 from './data/section8'
-// import section9 from './data/section9'
-// import section10 from './data/section10'
-// import section11 from './data/section11'
-// import sampleQuestion from './data/sampleQuestion'
+import section3 from './data/section3'
+import section4 from './data/section4'
+import section5 from './data/section5'
+import section6 from './data/section6'
+import section7 from './data/section7'
+import section8 from './data/section8'
+import section9 from './data/section9'
+import section10 from './data/section10'
+import section11 from './data/section11'
+import sampleQuestions from './data/sampleQuestions'
+import pl2Questions from './data/pl2Questions'
+
 
 const sections = {
   'Section 1: Basics & Classes': section1,
   'Section 2: Control Flow': section2,
-  // 'Section 3: Garbage Collection': section3,
-  // 'Section 4: Keywords & Data Types': section4,
-  // 'Section 5: Strings & Operators': section5,
-  // 'Section 6: Inheritance & Polymorphism': section6,
-  // 'Section 7: Threads': section7,
-  // 'Section 8: Methods & Strings': section8,
-  // 'Section 9: Collections': section9,
-  // 'Section 10: File I/O': section10,
-  // 'Section 11: Advanced Topics': section11,
-  // 'Sample Questions': sampleQuestion,
+  'Section 3: Garbage Collection': section3,
+  'Section 4: Keywords & Data Types': section4,
+  'Section 5: Strings & Operators': section5,
+  'Section 6: Inheritance & Polymorphism': section6,
+  'Section 7: Threads': section7,
+  'Section 8: Methods & Strings': section8,
+  'Section 9: Collections': section9,
+  'Section 10: File I/O': section10,
+  'Section 11: Advanced Topics': section11,
+  'Sample Questions': sampleQuestions,
+  'PL2 Questions': pl2Questions,
 }
 
 function App() {
