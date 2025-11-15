@@ -12,32 +12,41 @@ body {
 }
 
 code {
-  font-family: 'Courier New', monospace;
-  background-color: #f4f4f4;
+  font-family: 'Courier New', Consolas, Monaco, monospace;
+  background-color: #e5e7eb;
   padding: 2px 6px;
   border-radius: 4px;
   font-size: 0.9em;
+  color: #1f2937;
+}
+
+.dark code {
+  background-color: #374151;
+  color: #f3f4f6;
 }
 
 pre {
-  background-color: #f8f9fa;
-  border: 1px solid #e1e4e8;
-  border-radius: 6px;
+  background-color: #f9fafb;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
   padding: 16px;
   overflow-x: auto;
-  margin: 16px 0;
+  margin: 12px 0;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
 .dark pre {
   background-color: #1f2937;
-  border-color: #374151;
+  border-color: #4b5563;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
 }
 
 pre code {
   background-color: transparent;
   padding: 0;
   font-size: 0.875rem;
-  line-height: 1.5;
+  line-height: 1.6;
+  color: inherit;
 }
 
 /* Scrollbar styling */

@@ -1,0 +1,567 @@
+This app looks solid and works but I need a few changes to made, first of all we should have one question at a time and once the user selects their options they will click submit answer to get results if they were right or wrong. We should have a minimalistic progress bar and show scores out of all answered questions. The last and most important thing is the formatting of codes found as part of the questions and answers they should be preformatted to increase readability and understanding.
+
+Here is a project I saw and i need us to copy them and do a good job in implementing this into our app
+
+page.tsx:
+`"use client"
+
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Progress } from "@/components/ui/progress"
+import { CheckCircle2, XCircle, RotateCcw, Code2 } from "lucide-react"
+import { questions } from "@/lib/questions"
+
+export default function JavaMCQPractice() {
+  const [currentQuestion, setCurrentQuestion] = useState(0)
+  const [selectedAnswers, setSelectedAnswers] = useState<Record<number, string[]>>({})
+  const [showResults, setShowResults] = useState(false)
+  const [score, setScore] = useState(0)
+  const [answeredQuestions, setAnsweredQuestions] = useState<Set<number>>(new Set())
+
+  const question = questions[currentQuestion]
+  const progress = ((currentQuestion + 1) / questions.length) * 100
+  const isAnswered = answeredQuestions.has(currentQuestion)
+  const currentAnswer = selectedAnswers[currentQuestion] || []
+
+  const handleAnswerSelect = (option: string) => {
+    if (isAnswered) return
+
+    const newAnswers = { ...selectedAnswers }
+    if (question.type === "multiple") {
+      const current = newAnswers[currentQuestion] || []
+      if (current.includes(option)) {
+        newAnswers[currentQuestion] = current.filter((a) => a !== option)
+      } else {
+        newAnswers[currentQuestion] = [...current, option]
+      }
+    } else {
+      newAnswers[currentQuestion] = [option]
+    }
+    setSelectedAnswers(newAnswers)
+  }
+
+  const handleSubmitAnswer = () => {
+    if (currentAnswer.length === 0) return
+
+    const correctAnswers = question.answer.split(",").map((a) => a.trim())
+    const userAnswers = currentAnswer.sort()
+    const isCorrect = JSON.stringify(userAnswers) === JSON.stringify(correctAnswers.sort())
+
+    if (isCorrect) {
+      setScore(score + 1)
+    }
+
+    setAnsweredQuestions(new Set([...answeredQuestions, currentQuestion]))
+  }
+
+  const handleNext = () => {
+    if (currentQuestion < questions.length - 1) {
+      setCurrentQuestion(currentQuestion + 1)
+    } else {
+      setShowResults(true)
+    }
+  }
+
+  const handlePrevious = () => {
+    if (currentQuestion > 0) {
+      setCurrentQuestion(currentQuestion - 1)
+    }
+  }
+
+  const handleRestart = () => {
+    setCurrentQuestion(0)
+    setSelectedAnswers({})
+    setShowResults(false)
+    setScore(0)
+    setAnsweredQuestions(new Set())
+  }
+
+  const getAnswerStatus = (option: string) => {
+    if (!isAnswered) return null
+
+    const correctAnswers = question.answer.split(",").map((a) => a.trim())
+    const isCorrectOption = correctAnswers.includes(option)
+    const isSelected = currentAnswer.includes(option)
+
+    if (isCorrectOption && isSelected) return "correct"
+    if (isCorrectOption && !isSelected) return "missed"
+    if (!isCorrectOption && isSelected) return "wrong"
+    return null
+  }
+
+  if (showResults) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <Card className="w-full max-w-2xl border-2">
+          <CardContent className="p-8 text-center space-y-6">
+            <div className="w-24 h-24 rounded-full bg-primary/10 mx-auto flex items-center justify-center">
+              <Code2 className="w-12 h-12 text-primary" />
+            </div>
+            <div>
+              <h1 className="text-4xl font-bold mb-2">Quiz Complete!</h1>
+              <p className="text-muted-foreground text-lg">You've finished all {questions.length} Java MCQ questions</p>
+            </div>
+            <div className="bg-muted rounded-lg p-6">
+              <div className="text-6xl font-bold mb-2">
+                {score}/{questions.length}
+              </div>
+              <div className="text-xl text-muted-foreground">
+                {Math.round((score / questions.length) * 100)}% Correct
+              </div>
+            </div>
+            <Button onClick={handleRestart} size="lg" className="gap-2">
+              <RotateCcw className="w-5 h-5" />
+              Start Over
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="border-b bg-card">
+        <div className="container max-w-5xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
+                <Code2 className="w-6 h-6 text-primary-foreground" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold">Java MCQ Practice</h1>
+                <p className="text-sm text-muted-foreground">Master your Java skills</p>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="text-2xl font-bold">
+                {score}/{answeredQuestions.size}
+              </div>
+              <div className="text-sm text-muted-foreground">Correct</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Progress Bar */}
+      <div className="border-b bg-card">
+        <div className="container max-w-5xl mx-auto px-4 py-3">
+          <div className="flex items-center gap-4">
+            <span className="text-sm font-medium whitespace-nowrap">
+              Question {currentQuestion + 1} of {questions.length}
+            </span>
+            <Progress value={progress} className="flex-1" />
+            <span className="text-sm text-muted-foreground whitespace-nowrap">{Math.round(progress)}%</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Question Content */}
+      <main className="container max-w-5xl mx-auto px-4 py-8">
+        <Card className="border-2">
+          <CardContent className="p-8 space-y-6">
+            {/* Question */}
+            <div>
+              <div className="flex items-start gap-3 mb-4">
+                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-1">
+                  <span className="text-sm font-bold text-primary">Q</span>
+                </div>
+                <div className="flex-1">
+                  <h2 className="text-xl font-semibold leading-relaxed text-balance">{question.question}</h2>
+                </div>
+              </div>
+
+              {/* Code Block if present */}
+              {question.code && (
+                <div className="bg-muted rounded-lg p-4 font-mono text-sm overflow-x-auto border">
+                  <pre className="text-foreground">{question.code}</pre>
+                </div>
+              )}
+            </div>
+
+            {/* Options */}
+            {question.options && (
+              <div className="space-y-3">
+                {question.options.map((option) => {
+                  const status = getAnswerStatus(option.value)
+                  const isSelected = currentAnswer.includes(option.value)
+
+                  return (
+                    <button
+                      key={option.value}
+                      onClick={() => handleAnswerSelect(option.value)}
+                      disabled={isAnswered}
+                      className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
+                        status === "correct"
+                          ? "bg-green-500/10 border-green-500 text-green-600 dark:text-green-400"
+                          : status === "wrong"
+                            ? "bg-red-500/10 border-red-500 text-red-600 dark:text-red-400"
+                            : status === "missed"
+                              ? "bg-yellow-500/10 border-yellow-500 text-yellow-600 dark:text-yellow-400"
+                              : isSelected
+                                ? "bg-primary/10 border-primary"
+                                : "bg-card border-border hover:border-primary/50"
+                      } ${isAnswered ? "cursor-default" : "cursor-pointer"}`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <div
+                          className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 mt-0.5 ${
+                            status === "correct"
+                              ? "bg-green-500 border-green-500"
+                              : status === "wrong"
+                                ? "bg-red-500 border-red-500"
+                                : status === "missed"
+                                  ? "bg-yellow-500 border-yellow-500"
+                                  : isSelected
+                                    ? "bg-primary border-primary"
+                                    : "border-border"
+                          }`}
+                        >
+                          {status === "correct" && <CheckCircle2 className="w-4 h-4 text-white" />}
+                          {status === "wrong" && <XCircle className="w-4 h-4 text-white" />}
+                          {status === "missed" && <span className="text-xs text-white">!</span>}
+                          {!status && isSelected && <div className="w-2 h-2 rounded-full bg-primary-foreground" />}
+                        </div>
+                        <div className="flex-1">
+                          <span className="font-semibold mr-2">{option.value}.</span>
+                          <span>{option.text}</span>
+                        </div>
+                      </div>
+                    </button>
+                  )
+                })}
+              </div>
+            )}
+
+            {/* Show answer for text-based questions */}
+            {!question.options && isAnswered && (
+              <div className="bg-muted rounded-lg p-4 border-2 border-primary">
+                <div className="font-semibold mb-1">Correct Answer:</div>
+                <div className="text-primary font-mono">{question.answer}</div>
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            <div className="flex items-center justify-between pt-4 border-t">
+              <Button variant="outline" onClick={handlePrevious} disabled={currentQuestion === 0}>
+                Previous
+              </Button>
+
+              <div className="flex gap-3">
+                {!isAnswered && question.options && (
+                  <Button onClick={handleSubmitAnswer} disabled={currentAnswer.length === 0} className="gap-2">
+                    <CheckCircle2 className="w-4 h-4" />
+                    Submit Answer
+                  </Button>
+                )}
+
+                {(isAnswered || !question.options) && (
+                  <Button onClick={handleNext} className="gap-2">
+                    {currentQuestion === questions.length - 1 ? "Finish Quiz" : "Next Question"}
+                  </Button>
+                )}
+              </div>
+            </div>
+
+            {/* Hint for multiple answers */}
+            {question.type === "multiple" && !isAnswered && (
+              <div className="text-sm text-muted-foreground text-center pt-2">
+                💡 This question has multiple correct answers
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </main>
+    </div>
+  )
+}
+`
+
+progress.tsx:
+`"use client"
+
+import * as React from "react"
+import * as ProgressPrimitive from "@radix-ui/react-progress"
+
+import { cn } from "@/lib/utils"
+
+const Progress = React.forwardRef<
+  React.ElementRef<typeof ProgressPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>
+>(({ className, value, ...props }, ref) => (
+  <ProgressPrimitive.Root
+    ref={ref}
+    className={cn("relative h-2 w-full overflow-hidden rounded-full bg-secondary", className)}
+    {...props}
+  >
+    <ProgressPrimitive.Indicator
+      className="h-full w-full flex-1 bg-primary transition-all"
+      style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
+    />
+  </ProgressPrimitive.Root>
+))
+Progress.displayName = ProgressPrimitive.Root.displayName
+
+export { Progress }
+`
+
+
+questions.ts:
+`export interface Question {
+  question: string
+  code?: string
+  options?: { value: string; text: string }[]
+  answer: string
+  type: "single" | "multiple" | "text"
+}
+
+export const questions: Question[] = [
+  {
+    question: "Which of the following are valid definitions of an application's main() method?",
+    options: [
+      { value: "A", text: "public static void main();" },
+      { value: "B", text: "public static void main( String args );" },
+      { value: "C", text: "public static void main( String args[] );" },
+      { value: "D", text: "public static void main( Graphics g );" },
+      { value: "E", text: "public static boolean main( String args[] );" },
+    ],
+    answer: "C",
+    type: "single",
+  },
+  {
+    question:
+      "Consider the code below. Which statement, when inserted as the body of the for loop, would print the number of values in each row?",
+    code: `arr[0] = new int[4];
+arr[1] = new int[3];
+arr[2] = new int[2];
+arr[3] = new int[1];
+for( int n = 0; n < 4; n++ )
+    System.out.println( /* what goes here? */ );`,
+    options: [
+      { value: "A", text: "arr[n].length();" },
+      { value: "B", text: "arr.size;" },
+      { value: "C", text: "arr.size -1;" },
+      { value: "D", text: "arr[n][size];" },
+      { value: "E", text: "arr[n].length;" },
+    ],
+    answer: "E",
+    type: "single",
+  },
+  {
+    question: 'Which of the following are correct methods for initializing the array "dayhigh" with 7 values?',
+    options: [
+      { value: "A", text: "int dayhigh = { 24, 23, 24, 25, 25, 23, 21 };" },
+      { value: "B", text: "int dayhigh[] = { 24, 23, 24, 25, 25, 23, 21 };" },
+      { value: "C", text: "int[] dayhigh = { 24, 23, 24, 25, 25, 23, 21 };" },
+      { value: "D", text: "int dayhigh [] = new int[24, 23, 24, 25, 25, 23, 21];" },
+      { value: "E", text: "int dayhigh = new[24, 23, 24, 25, 25, 23, 21];" },
+    ],
+    answer: "B,C",
+    type: "multiple",
+  },
+  {
+    question:
+      "If you want subclasses to access, but not to override a superclass member method, what keyword should precede the name of the superclass method?",
+    answer: "final",
+    type: "text",
+  },
+  {
+    question:
+      "If you want a member variable to not be accessible outside the current class at all, what keyword should precede the name of the variable when declaring it?",
+    answer: "private",
+    type: "text",
+  },
+  {
+    question: "What will happen if you try to compile and run the following code?",
+    code: `public class MyClass { 
+    public static void main(String arguments[]) { 
+        amethod(arguments); 
+    } 
+    public void amethod(String[] arguments) { 
+        System.out.println(arguments); 
+        System.out.println(arguments[1]); 
+    } 
+}`,
+    options: [
+      { value: "A", text: "error Can't make static reference to void amethod." },
+      { value: "B", text: "error method main not correct" },
+      { value: "C", text: "error array must include parameter" },
+      { value: "D", text: "amethod must be declared with String" },
+    ],
+    answer: "A",
+    type: "single",
+  },
+  {
+    question: "What will happen when you compile and run the following code?",
+    code: `public class MyClass{ 
+    static int i; 
+    public static void main(String argv[]){ 
+        System.out.println(i); 
+    } 
+}`,
+    options: [
+      { value: "A", text: "Error Variable i may not have been initialized" },
+      { value: "B", text: "null" },
+      { value: "C", text: "1" },
+      { value: "D", text: "0" },
+    ],
+    answer: "D",
+    type: "single",
+  },
+  {
+    question: "What will be the result of attempting to compile and run the following code?",
+    code: `abstract class MineBase { 
+    abstract void amethod(); 
+    static int i; 
+}
+public class Mine extends MineBase { 
+    public static void main(String argv[]){ 
+        int[] ar=new int[5]; 
+        for(i=0;i < ar.length;i++) 
+            System.out.println(ar[i]); 
+    } 
+}`,
+    options: [
+      { value: "A", text: "a sequence of 5 0's will be printed" },
+      { value: "B", text: "Error: ar is used before it is initialized" },
+      { value: "C", text: "Error Mine must be declared abstract" },
+      { value: "D", text: "IndexOutOfBoundes Error" },
+    ],
+    answer: "C",
+    type: "single",
+  },
+  {
+    question: "Which of the following methods can be legally inserted in place of the comment //Method Here?",
+    code: `class Base{ 
+    public void amethod(int i) {  }
+} 
+public class Scope extends Base{
+    public static void main(String argv[]){
+    } 
+    //Method Here
+}`,
+    options: [
+      { value: "A", text: "void amethod(int i) throws Exception {}" },
+      { value: "B", text: "void amethod(long i)throws Exception {}" },
+      { value: "C", text: "void amethod(long i){}" },
+      { value: "D", text: "public void amethod(int i) throws Exception {}" },
+    ],
+    answer: "B,C",
+    type: "multiple",
+  },
+  {
+    question: "What modifiers would be legal at XX in the following code?",
+    code: `public class MyClass1 {
+    public static void main(String argv[]){ } 
+    /*Modifier at XX */ class MyInner {}
+}`,
+    options: [
+      { value: "A", text: "public" },
+      { value: "B", text: "private" },
+      { value: "C", text: "static" },
+      { value: "D", text: "friend" },
+    ],
+    answer: "A,B,C",
+    type: "multiple",
+  },
+  {
+    question: "What will happen when you compile and run the following code?",
+    code: `public class Scope{
+    private int i;
+    public static void main(String argv[]){
+        Scope s = new Scope();
+        s.amethod();
+    }
+    public static void amethod(){
+        System.out.println(i);
+    }
+}`,
+    options: [
+      { value: "A", text: "A value of 0 will be printed out" },
+      { value: "B", text: "Nothing will be printed out" },
+      { value: "C", text: "A compile time error" },
+      { value: "D", text: "A compile time error complaining of the scope of the variable i" },
+    ],
+    answer: "C",
+    type: "single",
+  },
+  {
+    question: "Which of the following lines will compile without warning or error?",
+    options: [
+      { value: "A", text: "float f=1.3;" },
+      { value: "B", text: 'char c="a";' },
+      { value: "C", text: "byte b=257;" },
+      { value: "D", text: "boolean b=null;" },
+      { value: "E", text: "int i=10;" },
+    ],
+    answer: "E",
+    type: "single",
+  },
+  {
+    question: "What will happen when you attempt to compile and run this code?",
+    code: `abstract class Base{
+    abstract public void myfunc();
+    public void another(){
+        System.out.println("Another method");
+    }
+}
+public class Abs extends Base{
+    public static void main(String argv[]){
+        Abs a = new Abs();
+        a.amethod();
+    }
+    public void myfunc(){
+        System.out.println("My func");
+    } 
+    public void amethod(){
+        myfunc();
+    }
+}`,
+    options: [
+      { value: "A", text: 'The code will compile and run, printing out the words "My Func"' },
+      { value: "B", text: "The compiler will complain that the Base class has non abstract methods" },
+      {
+        value: "C",
+        text: "The code will compile but complain at run time that the Base class has non abstract methods",
+      },
+      { value: "D", text: "The compiler will complain that the method myfunc in the base class has no body" },
+    ],
+    answer: "A",
+    type: "single",
+  },
+  {
+    question: "Why might you define a method as native?",
+    options: [
+      { value: "A", text: "To get to access hardware that Java does not know about" },
+      { value: "B", text: "To define a new data type such as an unsigned integer" },
+      { value: "C", text: "To write optimised code for performance in a language such as C/C++" },
+      { value: "D", text: "To overcome the limitation of the private scope of a method" },
+    ],
+    answer: "A,C",
+    type: "multiple",
+  },
+  {
+    question: "Which of the following are valid array declarations/definitions?",
+    code: `1:  int iArray1[10];
+2:  int iArray2[];
+3:  int iArray3[]   = new int[10];
+4:  int iArray4[10] = new int[10];
+5:  int []iArray5   = new int[10];
+6:  int iArray6[]   = new int[]; 
+7:  int iArray7[]   = null;`,
+    options: [
+      { value: "A", text: "1" },
+      { value: "B", text: "2" },
+      { value: "C", text: "3" },
+      { value: "D", text: "4" },
+      { value: "E", text: "5" },
+      { value: "F", text: "6" },
+      { value: "G", text: "7" },
+    ],
+    answer: "B,C,E,G",
+    type: "multiple",
+  },
+]
+`

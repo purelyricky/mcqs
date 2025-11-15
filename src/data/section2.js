@@ -1,10 +1,9 @@
 const section2 = [
   {
     id: 's2q1',
-    question: `If size = 4, triArray looks like:
-
-int[][] makeArray( int size ) 
-{  
+    question: 'If size = 4, triArray looks like:',
+    code: `int[][] makeArray( int size )
+{
     int[][] triArray = new int[size][];
     int val=1;
     for( int i = 0; i < triArray.length; i++ ) {
@@ -26,14 +25,11 @@ int[][] makeArray( int size )
   },
   {
     id: 's2q2',
-    question: `Given the variables defined below:
-
-int one = 1;
+    question: 'Given the variables defined below. Which of the following are valid?',
+    code: `int one = 1;
 int two = 2;
 char initial = '2';
-boolean flag = true;
-
-Which of the following are valid?`,
+boolean flag = true;`,
     options: [
       { id: 'A', text: 'if( one ){}' },
       { id: 'B', text: 'if( one = two ){}' },

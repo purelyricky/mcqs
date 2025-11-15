@@ -13,16 +13,13 @@ const section1 = [
   },
   {
     id: 's1q2',
-    question: `Consider the code below:
-
-arr[0] = new int[4];
+    question: 'Consider the code below. Which statement, when inserted as the body of the for loop, would print the number of values in each row?',
+    code: `arr[0] = new int[4];
 arr[1] = new int[3];
 arr[2] = new int[2];
 arr[3] = new int[1];
 for( int n = 0; n < 4; n++ )
-    System.out.println( /* what goes here? */ );
-
-Which statement below, when inserted as the body of the for loop, would print the number of values in each row?`,
+    System.out.println( /* what goes here? */ );`,
     options: [
       { id: 'A', text: 'arr[n].length();' },
       { id: 'B', text: 'arr.size;' },
@@ -68,16 +65,15 @@ Which statement below, when inserted as the body of the for loop, would print th
   },
   {
     id: 's1q6',
-    question: `What will happen if you try to compile and run the following code:
-
-public class MyClass { 
-    public static void main(String arguments[]) { 
-        amethod(arguments); 
-    } 
-    public void amethod(String[] arguments) { 
-        System.out.println(arguments); 
-        System.out.println(arguments[1]); 
-    } 
+    question: 'What will happen if you try to compile and run the following code?',
+    code: `public class MyClass {
+    public static void main(String arguments[]) {
+        amethod(arguments);
+    }
+    public void amethod(String[] arguments) {
+        System.out.println(arguments);
+        System.out.println(arguments[1]);
+    }
 }`,
     options: [
       { id: 'A', text: 'error Can\'t make static reference to void amethod.' },
@@ -89,13 +85,12 @@ public class MyClass {
   },
   {
     id: 's1q7',
-    question: `What will happen when you compile and run the following code?
-
-public class MyClass{ 
-    static int i; 
-    public static void main(String argv[]){ 
-        System.out.println(i); 
-    } 
+    question: 'What will happen when you compile and run the following code?',
+    code: `public class MyClass{
+    static int i;
+    public static void main(String argv[]){
+        System.out.println(i);
+    }
 }`,
     options: [
       { id: 'A', text: 'Error Variable i may not have been initialized' },
@@ -107,18 +102,17 @@ public class MyClass{
   },
   {
     id: 's1q8',
-    question: `What will be the result of attempting to compile and run the following code?
-
-abstract class MineBase { 
-    abstract void amethod(); 
-    static int i; 
+    question: 'What will be the result of attempting to compile and run the following code?',
+    code: `abstract class MineBase {
+    abstract void amethod();
+    static int i;
 }
-public class Mine extends MineBase { 
-    public static void main(String argv[]){ 
-        int[] ar=new int[5]; 
-        for(i=0;i < ar.length;i++) 
-            System.out.println(ar[i]); 
-    } 
+public class Mine extends MineBase {
+    public static void main(String argv[]){
+        int[] ar=new int[5];
+        for(i=0;i < ar.length;i++)
+            System.out.println(ar[i]);
+    }
 }`,
     options: [
       { id: 'A', text: 'a sequence of 5 0\'s will be printed' },
@@ -130,14 +124,13 @@ public class Mine extends MineBase {
   },
   {
     id: 's1q9',
-    question: `Which of the following methods can be legally inserted in place of the comment //Method Here?
-
-class Base{ 
+    question: 'Which of the following methods can be legally inserted in place of the comment //Method Here?',
+    code: `class Base{
     public void amethod(int i) { }
-} 
+}
 public class Scope extends Base{
     public static void main(String argv[]){
-    } 
+    }
     //Method Here
 }`,
     options: [
@@ -150,12 +143,11 @@ public class Scope extends Base{
   },
   {
     id: 's1q10',
-    question: `public class MyClass1 {
-    public static void main(String argv[]){ } 
+    question: 'What modifiers would be legal at XX in the following code?',
+    code: `public class MyClass1 {
+    public static void main(String argv[]){ }
     /*Modifier at XX */ class MyInner {}
-}
-
-What modifiers would be legal at XX in the above code?`,
+}`,
     options: [
       { id: 'A', text: 'public' },
       { id: 'B', text: 'private' },
