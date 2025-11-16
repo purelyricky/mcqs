@@ -4,6 +4,7 @@ import SectionNav from './components/SectionNav'
 import MCQQuestion from './components/MCQQuestion'
 import Progress from './components/Progress'
 import CompletionScreen from './components/CompletionScreen'
+import Sidebar from './components/Sidebar'
 import section1 from './data/section1'
 import section2 from './data/section2'
 import section3 from './data/section3'
@@ -59,6 +60,7 @@ const sections = {
 
 function App() {
   const [darkMode, setDarkMode] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('Section 1: Basics & Classes')
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState({})
   const [userAnswers, setUserAnswers] = useState({})
@@ -168,7 +170,14 @@ function App() {
 
   return (
     <div className="min-h-screen font-display bg-background-light dark:bg-background-dark text-gray-800 dark:text-gray-200">
-      <Header darkMode={darkMode} setDarkMode={setDarkMode} />
+      <Sidebar
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        sections={sections}
+        activeSection={activeSection}
+        onSectionChange={handleSectionChange}
+      />
+      <Header darkMode={darkMode} setDarkMode={setDarkMode} onMenuClick={() => setSidebarOpen(true)} />
 
       <SectionNav
         sections={Object.keys(sections)}
