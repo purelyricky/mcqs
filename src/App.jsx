@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import Header from './components/Header'
-import SectionNav from './components/SectionNav'
+import QuestionNav from './components/QuestionNav'
 import MCQQuestion from './components/MCQQuestion'
 import Progress from './components/Progress'
 import CompletionScreen from './components/CompletionScreen'
@@ -81,6 +81,13 @@ function App() {
     if (currentQuestionIndex[section] === undefined) {
       setCurrentQuestionIndex(prev => ({ ...prev, [section]: 0 }))
     }
+  }
+
+  const handleQuestionSelect = (questionIdx) => {
+    setCurrentQuestionIndex(prev => ({
+      ...prev,
+      [activeSection]: questionIdx
+    }))
   }
 
   const handleAnswerSelect = (questionId, selectedOptions) => {
@@ -179,10 +186,10 @@ function App() {
       />
       <Header darkMode={darkMode} setDarkMode={setDarkMode} onMenuClick={() => setSidebarOpen(true)} />
 
-      <SectionNav
-        sections={Object.keys(sections)}
-        activeSection={activeSection}
-        setActiveSection={handleSectionChange}
+      <QuestionNav
+        totalQuestions={currentQuestions.length}
+        currentQuestionIndex={questionIdx}
+        onQuestionSelect={handleQuestionSelect}
       />
 
       {/* Show Completion Screen if section is completed */}
